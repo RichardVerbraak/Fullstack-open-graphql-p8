@@ -92,14 +92,34 @@ const typeDefs = gql`
       genres: [String!]     
   }
 
+  type Author {
+      name: String!,
+      bookCount: Int!
+  }
+
   type Query {
       bookCount: Int!
       authorCount: Int!
       allBooks: [Book!]!
+      allAuthors: [Author!]!
   }
 `
 
 const resolvers = {
+    Author: {
+        bookCount: (root, args) => {           
+            // This function runs for every author
+            // it checks if the name (root author object name) is the same as the books author 
+            // filter then returns an array with only those books and returns the length of them
+            const count = books.filter((book) => {    
+                return book.author === root.name 
+            })
+           
+            return count.length
+            
+        }
+    },
+
   Query: {
       bookCount: () => {
           return books.length
@@ -109,6 +129,9 @@ const resolvers = {
       },
       allBooks: () => {
         return books
+      },
+      allAuthors: () => {        
+        return authors
       }
   }
 }
