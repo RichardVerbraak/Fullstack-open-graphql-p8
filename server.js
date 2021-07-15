@@ -95,6 +95,7 @@ const typeDefs = gql`
 	type Author {
 		name: String!
 		bookCount: Int!
+		born: String
 	}
 
 	type Query {
@@ -174,6 +175,18 @@ const resolvers = {
 	Mutation: {
 		addBook: (root, args) => {
 			const { title, author, published, genres } = args
+
+			const authorExists = authors.find((author) => {
+				return author.name === author
+			})
+
+			if (!authorExists) {
+				const newAuthor = {
+					name: author,
+					born: null,
+				}
+				authors = [...authors, newAuthor]
+			}
 
 			const book = {
 				title,
